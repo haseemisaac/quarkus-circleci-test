@@ -1,0 +1,20 @@
+#
+# Native Quarkus CircleCI configuration file
+#
+version: 2.1
+jobs:
+  build:
+    # Use "machine" instead of e.g. "docker" for better/faster results
+    docker:
+      - image: haseemisaac/quarkus-build-gcp:latest
+    # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
+    resource_class: medium
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Print Versions and All
+          command: java -version && javac -version && echo $GRAALVM_HOME && echo $JAVA_HOME && echo $PATH
+      - run:
+          name: Native Build
+          command: ./mvnw clean package -Pnative -DskipTests -Dmaven.test.skip=true
